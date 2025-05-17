@@ -10,6 +10,6 @@ public class Sumple : MonoBehaviour
         _fadeManager =GameObject.Find("FadeManager").GetComponent<FadeManager>();
 
 
-        _ = _fadeManager.Fade<Enum>("A-Test2", Radial_360_Origin.Right, VerticalOrigin.Top);
+        _ = _fadeManager.Fade<Enum>("SumpleScene2", Radial_360.Right, Vertical.Top);
     }
 }

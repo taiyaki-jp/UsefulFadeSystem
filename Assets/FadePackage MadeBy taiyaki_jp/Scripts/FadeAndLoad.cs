@@ -20,7 +20,7 @@ public class FadeAndLoad
     /// FillAmount式フェードイン
     /// </summary>
     /// <typeparam name="TOriginEnum">FillOriginEnum.csの中のEnum</typeparam>
-    /// <param name="origin">methodで指定したものに対応するFillOriginEnumを使う</param>
+    /// <param name="origin">FillOriginEnumのどれか</param>
     public async UniTask FadeIn<TOriginEnum>(TOriginEnum origin) where TOriginEnum : Enum
     {
         float fillAmount = 0;
@@ -39,7 +39,7 @@ public class FadeAndLoad
     /// FillAmount式フェードアウト
     /// </summary>
     /// <typeparam name="TOriginEnum">FillOriginEnum.csの中のEnum</typeparam>
-    /// <param name="origin">methodで指定したものに対応するFillOriginEnumを使う</param>
+    /// <param name="origin">FillOriginEnumのどれか</param>
     public async UniTask FadeOut<TOriginEnum>(TOriginEnum origin)where TOriginEnum : Enum
     {
         
@@ -66,15 +66,15 @@ public class FadeAndLoad
     {
         switch (origin)
         {
-            case HorizontalOrigin:
+            case Horizontal:
                 return Image.FillMethod.Horizontal;
-            case VerticalOrigin:
+            case Vertical:
                 return Image.FillMethod.Vertical;
-            case Radial_90_Origin:
+            case Radial_90:
                 return Image.FillMethod.Radial90;
-            case Radial_180_Origin:
+            case Radial_180:
                 return Image.FillMethod.Radial180;
-            case Radial_360_Origin:
+            case Radial_360:
                 return Image.FillMethod.Radial360;
         }
         return Image.FillMethod.Horizontal;
@@ -84,7 +84,7 @@ public class FadeAndLoad
     /// <summary>
     /// 透明度いじる方式のフェードイン
     /// </summary>
-    public async UniTask FadeIn()
+    public async UniTask FadeIn(Color startColor = default,Color endColor=default)
     {
         _fadeImage.fillAmount = 1;
 
@@ -100,7 +100,7 @@ public class FadeAndLoad
     /// <summary>
     /// 透明度いじる方式のフェードアウト
     /// </summary>
-    public async UniTask FadeOut()
+    public async UniTask FadeOut(Color startColor = default, Color endColor = default)
     {
         _fadeImage.fillAmount = 1;
 

@@ -29,47 +29,6 @@ public class FadeManager : MonoBehaviour
         }
     }
 
-    /*
-    /// <summary>
-    /// フェードを呼び出す関数1
-    /// </summary>
-    /// <param name="SceneName">遷移先のシーンの名前</param>
-    public async void Fade(string SceneName)
-    {
-        FadeCanvas = Fade_Singleton.canvas;
-        FadeCanvas.SetActive(true);
-        
-        await load.FadeIn();
-        //BeforAction.Invoke();
-
-        await SceneManager.LoadSceneAsync(SceneName);
-        //AfterAction.Invoke();
-
-        await load.FadeOut();
-        //FinishAction.Invoke();
-
-        FadeCanvas.SetActive(false);
-    }
-    /// <summary>
-    /// フェードを呼び出す関数2
-    /// </summary>
-    /// <param name="SceneName">遷移先のシーンの名前</param>
-    public async void FadeWhite(string SceneName)
-    {
-        FadeCanvas.SetActive(true);
-
-        await load.FadeInWhite();
-        //BeforAction.Invoke();
-
-        await SceneManager.LoadSceneAsync(SceneName);
-        //AfterAction.Invoke();
-
-        await load.FadeOutWhite();
-        //FinishAction.Invoke();
-
-        FadeCanvas.SetActive(false);
-    }*/
-
     /// <summary>
     /// 最初のフェード
     /// </summary>
@@ -91,7 +50,7 @@ public class FadeManager : MonoBehaviour
     /// <param name="sceneName">遷移先のシーンの名前</param>
     /// <param name="startOrigin">FillOriginEnum.csのEnum</param>
     /// <param name="endOrigin">FillOriginEnum.csのEnum</param>
-    /// <param name="color">[省略可能]フェードの色 省略すると黒</param>
+    /// <param name="color">[省略可]フェードの色　省略すると黒</param>
     public async UniTask Fade<TOriginEnum>(string sceneName,TOriginEnum startOrigin,TOriginEnum endOrigin,Color color=default)where TOriginEnum : Enum
     {
         _fadeCanvas = Fade_Singleton.Canvas;
