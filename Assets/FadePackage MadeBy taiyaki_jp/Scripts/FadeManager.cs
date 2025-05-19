@@ -6,11 +6,11 @@ using UnityEngine.SceneManagement;
 
 public class FadeManager : MonoBehaviour
 {
-    [SerializeField, Label("フェード速度")] private float fadeSpeed=1;
+    [SerializeField, Label("フェード速度")] private float _fadeSpeed=1;
     private GameObject _fadeCanvas;
     private FadeAndLoad _load;
 
-    System.Action BeforAction=null;
+    System.Action BeforeAction=null;
     System.Action AfterAction=null;
     System.Action FinishAction = null;
 
@@ -18,9 +18,11 @@ public class FadeManager : MonoBehaviour
     {
         _fadeCanvas = Fade_Singleton.Canvas;
 
-        _load = new FadeAndLoad();
-        _load.Image=Fade_Singleton.FadeImage;
-        _load.Speed=fadeSpeed;
+        _load = new FadeAndLoad
+        {
+            Image = Fade_Singleton.FadeImage,
+            Speed = _fadeSpeed
+        };
 
         if (Fade_Singleton.IsFirst)
         {
@@ -35,13 +37,11 @@ public class FadeManager : MonoBehaviour
     private async UniTask FirstFade()
     {
         //AfterAction.Invoke();
-        _load.SetColor(Color.black);
-        await _load.FadeOut();
+        await _load.FadeSystem<Enum>(-1,Color.black, Color.clear);
         //FinishAction.Invoke();
 
         _fadeCanvas.SetActive(false);
     }
-
 
 
     /// <summary>
@@ -50,46 +50,69 @@ public class FadeManager : MonoBehaviour
     /// <param name="sceneName">遷移先のシーンの名前</param>
     /// <param name="startOrigin">FillOriginEnum.csのEnum</param>
     /// <param name="endOrigin">FillOriginEnum.csのEnum</param>
-    /// <param name="color">[省略可]フェードの色　省略すると黒</param>
-    public async UniTask Fade<TOriginEnum>(string sceneName,TOriginEnum startOrigin,TOriginEnum endOrigin,Color color=default)where TOriginEnum : Enum
+    /// <param name="startColor">[省略可]フェード開始時の色　省略すると黒</param>
+    /// <param name="midColor">[省略可]画面が見えなくなった時の色　省略すると黒</param>
+    /// <param name="midColor2">[省略可]画面が見えなくなったあと色をさらに変えたいときに使う</param>
+    /// <param name="endColor">[省略可]フェード終了時の色　省略すると黒</param>
+    public async UniTask Fade<TOriginEnum>(string sceneName,TOriginEnum startOrigin,TOriginEnum endOrigin,Color startColor=default,Color midColor=default,Color midColor2=default,Color endColor=default)where TOriginEnum : Enum
     {
+        //defaultを黒に
+        if(startColor==default)startColor=Color.black;
+        if(midColor==default)midColor=Color.black;
+        if(endColor==default)endColor=Color.black;
+
         _fadeCanvas = Fade_Singleton.Canvas;
         _fadeCanvas.SetActive(true);
+        Color finalMid = midColor;
 
-        if(color==default)_load.SetColor(Color.black); 
-            else _load.SetColor(color);
-
-        await _load.FadeIn(startOrigin);
-        //BeforAction.Invoke();
+        await _load.FadeSystem(+1,startColor,midColor,startOrigin);
+        //BeforeAction.Invoke();
+        if (midColor2 != default)
+        {
+            await _load.FadeSystem<Enum>(-1, midColor, midColor2);
+            finalMid = midColor2;
+        }
 
         await SceneManager.LoadSceneAsync(sceneName);
         //AfterAction.Invoke();
 
-        await _load.FadeOut(endOrigin);
+        await _load.FadeSystem(-1,finalMid,endColor,endOrigin);
         //FinishAction.Invoke();
 
         _fadeCanvas.SetActive(false);
     }
+
     /// <summary>
     /// 透明度フェードを呼び出す関数
     /// </summary>
     /// <param name="sceneName">遷移先のシーンの名前</param>
-    /// <param name="color">どんな色でフェードするか</param>
-    public async UniTask Fade(string sceneName,Color color)
+    /// <param name="startColor">[省略可]フェードの色　省略すると透明</param>
+    /// <param name="midColor">[省略可]フェードの色　省略すると黒</param>
+    /// <param name="midColor2">[省略可]画面が見えなくなったあと色をさらに変えたいときに使う</param>
+    /// <param name="endColor">[省略可]フェードの色　省略すると透明</param>
+    public async UniTask Fade(string sceneName,Color startColor=default,Color midColor=default,Color midColor2=default,Color endColor=default)
     {
+        //defaultを変換
+        if(startColor==default)startColor=Color.clear;
+        if(midColor==default)midColor=Color.black;
+        if(endColor==default)endColor=Color.clear;
+
         _fadeCanvas = Fade_Singleton.Canvas;
         _fadeCanvas.SetActive(true);
+        Color finalMid = midColor;
 
-        if (color == default) _load.SetColor(Color.black);
-        else _load.SetColor(color);
-
-        await _load.FadeIn();
-        //BeforAction.Invoke();
+        await _load.FadeSystem<Enum>(+1,startColor,midColor);
+        //BeforeAction.Invoke();
+        if (midColor2 != default)
+        {
+            await _load.FadeSystem<Enum>(-1, midColor, midColor2);
+            finalMid = midColor2;
+        }
 
         await SceneManager.LoadSceneAsync(sceneName);
         //AfterAction.Invoke();
 
-        await _load.FadeOut();
+        await _load.FadeSystem<Enum>(-1, finalMid,endColor);
         //FinishAction.Invoke();
 
         _fadeCanvas.SetActive(false);
