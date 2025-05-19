@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class colorLarpTest : MonoBehaviour
+public class colorLerpTest : MonoBehaviour
 {
     [SerializeField] private Color _startColor;
     [SerializeField] private Color _endColor;
