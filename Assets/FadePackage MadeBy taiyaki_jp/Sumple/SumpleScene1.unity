@@ -688,6 +688,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _button: {fileID: 833611098}
+  _startColor: {r: 0, g: 0, b: 0, a: 0}
+  _midColor: {r: 1, g: 0, b: 0, a: 1}
+  _mid2Color: {r: 0, g: 0, b: 0, a: 1}
+  _endColor: {r: 0, g: 0, b: 0, a: 1}
 --- !u!4 &1428916117
 Transform:
   m_ObjectHideFlags: 0
