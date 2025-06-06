@@ -12,11 +12,13 @@ public class Fade_Singleton : MonoBehaviour
 
     private void Awake()
     {
+        GameObject _manager;
+        _manager = GameObject.Find("FadeManager");
         //もしすでに生成されていれば
         if (_instanceClosed != null && _instanceClosed != this)
         {
             Destroy(this.gameObject);//自身を削除
-
+            Destroy(_manager);
         }
         else//これがないとDestroyしたあと初期化され直す
         {
@@ -24,6 +26,7 @@ public class Fade_Singleton : MonoBehaviour
             //staticに自身を入れる
             _instanceClosed = this;
             DontDestroyOnLoad(this.gameObject);//それをシーンを跨ぐ様にする
+            DontDestroyOnLoad(_manager);
 
             //↓初期化処理
             _image = GetComponentInChildren<Image>();

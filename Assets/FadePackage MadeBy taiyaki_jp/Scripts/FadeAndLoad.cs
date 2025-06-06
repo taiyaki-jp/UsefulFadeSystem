@@ -1,5 +1,5 @@
-﻿using Cysharp.Threading.Tasks;
-using System;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,18 +17,16 @@ public class FadeAndLoad
     }
 
     /// <summary>
-    /// 各フェードを呼び出すUniTask
+    /// 各フェードを呼び出すコルーチン
     /// </summary>
     /// <param name="mode">-1=フェードアウト　+1=フェードイン</param>
     /// <param name="startColor">開始時の色</param>
     /// <param name="endColor">終了時の色</param>
     /// <param name="origin">[省略可]FillOriginEnumのどれか　省略すると透明度フェード</param>
     /// <typeparam name="TOriginEnum"></typeparam>
-    public async UniTask FadeSystem<TOriginEnum>(int mode,Color startColor,Color endColor,TOriginEnum origin=default) where TOriginEnum : Enum
+    public IEnumerator FadeSystem<TOriginEnum>(int mode,Color startColor,Color endColor,TOriginEnum origin=default) where TOriginEnum : Enum
     {
-
         var useColor = (startColor != endColor);//フェード中色を変えるか
-
         if (useColor==false)_fadeImage.color=startColor;
         var useOrigin = origin!=null;//キャンバスを動かしてフェードするか
 
@@ -46,15 +44,18 @@ public class FadeAndLoad
             useOrigin = false;
             _fadeImage.fillAmount = 1;
         }
-
+       
         var t = 0f;
+        var takes = 1;
         while (t<1)
         {
             t += _fadeSpeed * Time.deltaTime;
+            Debug.Log($"Times{t}\nTakes{takes++}\nOrigin{origin}");
             if (useOrigin) Fade(mode, t);
             if (useColor)  Fade(t,startColor,endColor);
-            await UniTask.Yield();
+            yield return null;
         }
+        Debug.Log("RoopOut");
     }
 
     /// <summary>
@@ -66,13 +67,9 @@ public class FadeAndLoad
     {
         var fillAmount = 0f;
         if (mode == -1)
-        {
             fillAmount = 1 - t;
-        }
         else if (mode == 1)
-        {
             fillAmount = t;
-        }
         _fadeImage.fillAmount = fillAmount;
     }
 

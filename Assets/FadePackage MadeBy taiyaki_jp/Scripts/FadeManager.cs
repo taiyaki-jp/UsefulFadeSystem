@@ -1,18 +1,19 @@
-﻿using Cysharp.Threading.Tasks;
-using NaughtyAttributes;
-using System;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class FadeManager : MonoBehaviour
 {
-    [SerializeField, Label("フェード速度")] private float _fadeSpeed=1;
+    [SerializeField, Header("フェード速度")] private float _fadeSpeed=1;
     private GameObject _fadeCanvas;
     private FadeAndLoad _load;
 
     System.Action BeforeAction=null;
     System.Action AfterAction=null;
     System.Action FinishAction = null;
+
+    Coroutine _fadeCoroutine;
 
     private void Start()
     {
@@ -26,7 +27,7 @@ public class FadeManager : MonoBehaviour
 
         if (Fade_Singleton.IsFirst)
         {
-            _ = FirstFade();
+            _fadeCoroutine = StartCoroutine(FirstFade());
             Fade_Singleton.IsFirst = false;
         }
     }
@@ -34,16 +35,15 @@ public class FadeManager : MonoBehaviour
     /// <summary>
     /// 最初のフェード
     /// </summary>
-    private async UniTask FirstFade()
+    private IEnumerator FirstFade()
     {
         //AfterAction.Invoke();
-        await _load.FadeSystem<Enum>(-1,Color.black, Color.clear);
+        yield return _load.FadeSystem<Enum>(-1,Color.black, Color.clear);
         //FinishAction.Invoke();
 
         _fadeCanvas.SetActive(false);
+        Stop();
     }
-
-
     /// <summary>
     /// フェードを呼び出す関数
     /// </summary>
@@ -54,37 +54,53 @@ public class FadeManager : MonoBehaviour
     /// <param name="midColor">[省略可]画面が見えなくなった時の色　省略すると黒</param>
     /// <param name="midColor2">[省略可]画面が見えなくなったあと色をさらに変えたいときに使う</param>
     /// <param name="endColor">[省略可]フェード終了時の色　省略すると黒　透明度フェードなら透明</param>
-    public async UniTask Fade<TOriginEnum>(string sceneName,TOriginEnum startOrigin=default,TOriginEnum endOrigin=default,Color startColor=default,Color midColor=default,Color midColor2=default,Color endColor=default)where TOriginEnum : Enum
+    public void Fade<TOriginEnum>(string sceneName, TOriginEnum startOrigin = default, TOriginEnum endOrigin = default, Color startColor = default, Color midColor = default, Color midColor2 = default, Color endColor = default) where TOriginEnum : Enum
     {
         //defaultを変換
-        if(startOrigin==null&&startColor==default)startColor=Color.clear;
-        else　if(startColor==default)startColor=Color.black;
+        if (startOrigin == null && startColor == default) startColor = Color.clear;
+        else if (startColor == default) startColor = Color.black;
 
-        if(midColor==default)midColor=Color.black;
+        if (midColor == default) midColor = Color.black;
 
-        if(endOrigin==null&&endColor==default)endColor=Color.clear;
-        else if(endColor==default)endColor=Color.black;
+        if (endOrigin == null && endColor == default) endColor = Color.clear;
+        else if (endColor == default) endColor = Color.black;
+
+        StartCoroutine(FadeCor<Enum>(sceneName,startOrigin,endOrigin,startColor,midColor,midColor2,endColor));
+    }
+    
+    private IEnumerator FadeCor<TOriginEnum>(string sceneName,TOriginEnum startOrigin,TOriginEnum endOrigin,Color startColor,Color midColor,Color midColor2,Color endColor)where TOriginEnum : Enum
+    {
 
         _fadeCanvas = Fade_Singleton.Canvas;
         _fadeCanvas.SetActive(true);
         Color finalMid = midColor;
 
-        await _load.FadeSystem(+1,startColor,midColor,startOrigin);
+        yield return _fadeCoroutine = StartCoroutine(_load.FadeSystem(+1, startColor, midColor, startOrigin));
         //BeforeAction.Invoke();
+        Stop();
         if (midColor2 != default)
         {
-            await UniTask.Delay(TimeSpan.FromSeconds(1f));
-            await _load.FadeSystem<Enum>(-1, midColor, midColor2);
-            await UniTask.Delay(TimeSpan.FromSeconds(1f));
+            yield return new WaitForSeconds(1);
+            yield return _fadeCoroutine = StartCoroutine(_load.FadeSystem<Enum>(-1, midColor, midColor2));
+            Stop();
+            yield return new WaitForSeconds(1);
             finalMid = midColor2;
         }
 
-        await SceneManager.LoadSceneAsync(sceneName);
+        yield return SceneManager.LoadSceneAsync(sceneName);
         //AfterAction.Invoke();
 
-        await _load.FadeSystem(-1,finalMid,endColor,endOrigin);
+        yield return _fadeCoroutine = StartCoroutine(_load.FadeSystem(-1, finalMid, endColor, endOrigin));
         //FinishAction.Invoke();
+        Stop();
+        Debug.Log("a");
 
         _fadeCanvas.SetActive(false);
+    }
+
+    private void Stop()
+    {
+        StopCoroutine(_fadeCoroutine);
+        _fadeCoroutine = null;
     }
 }

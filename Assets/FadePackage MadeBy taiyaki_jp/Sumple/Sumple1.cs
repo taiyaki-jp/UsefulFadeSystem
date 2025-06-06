@@ -15,6 +15,6 @@ public class Sumple1 : MonoBehaviour
     {
         _fadeManager =GameObject.Find("FadeManager").GetComponent<FadeManager>();
 
-        _button.onClick.AddListener(()=>_ = _fadeManager.Fade<Enum>("SumpleScene2",endOrigin:Vertical.Top,startColor:_startColor,midColor:_midColor,midColor2:_mid2Color,endColor:_endColor));
+        _button.onClick.AddListener(()=>_fadeManager.Fade<Enum>("SumpleScene2",startOrigin:Horizontal.Left,endOrigin:Vertical.Top,startColor:_startColor,midColor:_midColor,midColor2:_mid2Color,endColor:_endColor));
     }
 }
