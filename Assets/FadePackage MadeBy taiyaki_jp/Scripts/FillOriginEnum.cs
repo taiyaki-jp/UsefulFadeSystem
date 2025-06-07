@@ -5,26 +5,26 @@ public enum Horizontal
     }
 public enum Vertical
     {
-        Buttom=0,
+        Bottom=0,
         Top,
     }
 public enum Radial_90
     {
-        ButtomLeft=0,
+        BottomLeft=0,
         TopLeft,
         TopRight,
-        ButtomRight,
+        BottomRight,
     }
 public enum Radial_180
     {
-        Buttom=0,
-        Left, 
+        Bottom=0,
+        Left,
         Top,
         Right,
     }
 public enum Radial_360
     {
-        Buttom = 0,
+        Bottom = 0,
         Left,
         Top,
         Right,

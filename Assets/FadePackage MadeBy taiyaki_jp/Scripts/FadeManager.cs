@@ -67,7 +67,7 @@ public class FadeManager : MonoBehaviour
 
         StartCoroutine(FadeCor<Enum>(sceneName,startOrigin,endOrigin,startColor,midColor,midColor2,endColor));
     }
-    
+
     private IEnumerator FadeCor<TOriginEnum>(string sceneName,TOriginEnum startOrigin,TOriginEnum endOrigin,Color startColor,Color midColor,Color midColor2,Color endColor)where TOriginEnum : Enum
     {
 

@@ -41,10 +41,8 @@ public class FadeAndLoad
         }
         else
         {
-            useOrigin = false;
             _fadeImage.fillAmount = 1;
         }
-       
         var t = 0f;
         var takes = 1;
         while (t<1)
@@ -55,7 +53,7 @@ public class FadeAndLoad
             if (useColor)  Fade(t,startColor,endColor);
             yield return null;
         }
-        Debug.Log("RoopOut");
+        Debug.Log("LoopOut");
     }
 
     /// <summary>
