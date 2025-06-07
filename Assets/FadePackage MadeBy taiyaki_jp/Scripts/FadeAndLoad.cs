@@ -44,16 +44,13 @@ public class FadeAndLoad
             _fadeImage.fillAmount = 1;
         }
         var t = 0f;
-        var takes = 1;
         while (t<1)
         {
             t += _fadeSpeed * Time.deltaTime;
-            Debug.Log($"Times:{t}, Takes:{takes++},deltaTime:{Time.deltaTime}");
             if (useOrigin) Fade(mode, t);
             if (useColor)  Fade(t,startColor,endColor);
             yield return null;
         }
-        Debug.Log("LoopOut");
     }
 
     /// <summary>
