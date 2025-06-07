@@ -93,7 +93,6 @@ public class FadeManager : MonoBehaviour
         yield return _fadeCoroutine = StartCoroutine(_load.FadeSystem(-1, finalMid, endColor, endOrigin));
         //FinishAction.Invoke();
         Stop();
-        Debug.Log("a");
 
         _fadeCanvas.SetActive(false);
     }
