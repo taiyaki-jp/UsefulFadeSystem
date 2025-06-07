@@ -1,12 +1,11 @@
 ﻿using Cysharp.Threading.Tasks;
-using NaughtyAttributes;
 using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class FadeManager : MonoBehaviour
 {
-    [SerializeField, Label("フェード速度")] private float _fadeSpeed=1;
+    [SerializeField, Header("フェード速度")] private float _fadeSpeed=1;
     private GameObject _fadeCanvas;
     private FadeAndLoad _load;
 

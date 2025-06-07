@@ -27,7 +27,7 @@ public class Fade_Singleton : MonoBehaviour
 
             //↓初期化処理
             _image = GetComponentInChildren<Image>();
-            _canvas = this.gameObject;
+            _canvas = GetComponentInChildren<Canvas>().gameObject;
             _isFirst = true;
         }
     }
