@@ -8,11 +8,34 @@ using static FadeActionMode;//これがあるとAction設定のときにタイ�
 
 public class FadeManager : SingletonBase<FadeManager>
 {
-    [SerializeField, Header("フェード速度")] private float _fadeSpeed = 1;
-    [SerializeField] private GameObject _fadeCanvas;
-    private FadeAndLoad _load;
-    private bool _isFaded=false;//画面が隠れているかのbool
-    private Color _finalMid;//今隠している画面の色
+#region Singleton
+
+    public static FadeManager Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                GameObject go = new GameObject("FadeManager");
+                SetInstance(go.AddComponent<FadeManager>());
+                DontDestroyOnLoad(go);
+            }
+            return GetInstance();
+        }
+    }
+    protected override void Awake()
+    {
+        base.Awake();//SingletonBaseのAwakeを実行
+        _load = new FadeAndLoad
+        {
+            Image = _fadeCanvas.GetComponentInChildren<Image>(),
+            Speed = _fadeSpeed
+        };
+
+    }
+#endregion
+
+#region Actions
 
     Action _beforeAction = null;
     Action _afterAction = null;
@@ -59,18 +82,14 @@ public class FadeManager : SingletonBase<FadeManager>
                 break;
         }
     }
+#endregion
 
-    protected override void Awake()
-    {
-        base.Awake();//SingletonBaseのAwakeを実行
-        _load = new FadeAndLoad
-        {
-            Image = _fadeCanvas.GetComponentInChildren<Image>(),
-            Speed = _fadeSpeed
-        };
 
-    }
-
+    [SerializeField, Header("フェード速度")] private float _fadeSpeed = 1;
+    [SerializeField] private GameObject _fadeCanvas;
+    private FadeAndLoad _load;
+    private bool _isFaded=false;//画面が隠れているかのbool
+    private Color _finalMid;//今隠している画面の色
     private void Start()
     {
         _ = FirstFade();
@@ -101,7 +120,7 @@ public class FadeManager : SingletonBase<FadeManager>
     /// <param name="midColor">[省略可]画面が見えなくなった時の色　省略すると黒</param>
     /// <param name="midColor2">[省略可]画面が見えなくなったあと色をさらに変えたいときに使う</param>
     /// <param name="endColor">[省略可]フェード終了時の色　省略すると黒　透明度フェードなら透明</param>
-    public async UniTask FadeAndSceneChenge<TOriginEnum>(string sceneName, TOriginEnum startOrigin = default, TOriginEnum endOrigin = default, Color startColor = default, Color midColor = default, Color midColor2 = default, Color endColor = default) where TOriginEnum : Enum
+    public async UniTask FadeAndSceneChange<TOriginEnum>(string sceneName, TOriginEnum startOrigin = default, TOriginEnum endOrigin = default, Color startColor = default, Color midColor = default, Color midColor2 = default, Color endColor = default) where TOriginEnum : Enum
     {
         //defaultを変換
         if (startColor == default) startColor = Color.black;//色省略なら黒に
@@ -145,7 +164,7 @@ public class FadeManager : SingletonBase<FadeManager>
     /// フェードで画面を隠した後にゲームを終了する
     /// Editorでも問題なく終了します
     /// </summary>
-    public async void GameEndFade()
+    public async UniTaskVoid GameEndFade()
     {
         _fadeCanvas.SetActive(true);
         await _load.FadeSystem<Enum>(FadeMode.FadeOut, Color.black,Color.black);
@@ -161,13 +180,18 @@ public class FadeManager : SingletonBase<FadeManager>
     /// シーン遷移はしません
     /// 画面を隠すだけです
     /// </summary>
+    /// <param name="mode">FadeModeEnum</param>
+    /// <param name="origin">[省略可]FillOriginEnum.csのEnum 省略すると透明度フェード</param>
+    /// <param name="startColor">[省略可]フェード開始時の色　省略すると黒　透明度フェードなら透明</param>
+    /// <param name="endColor">[省略可]フェード終了時の色　省略すると黒　透明度フェードなら透明</param>
     public async UniTask Fade<TOriginEnum>(FadeMode mode, TOriginEnum origin = default, Color startColor = default,Color endColor = default ) where TOriginEnum : Enum
     {
         _finalMid = endColor;
 
+        await _load.FadeSystem(mode, startColor, endColor, origin);
+
         if (mode == FadeMode.FadeIn)_isFaded = false;
         else if (mode == FadeMode.FadeOut)_isFaded = true;
-
-        await _load.FadeSystem(mode, startColor, endColor, origin);
     }
+
 }

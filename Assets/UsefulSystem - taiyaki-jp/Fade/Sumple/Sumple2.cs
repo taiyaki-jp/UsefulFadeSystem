@@ -15,7 +15,7 @@ public class Sumple2 : MonoBehaviour
 
         _button.onClick.AddListener(() =>
             //↓このように呼び出す
-            _ = _fadeManager.FadeAndSceneChenge<Enum>("SumpleScene1")
+            _ = _fadeManager.FadeAndSceneChange<Enum>("SumpleScene1")
         );
     }
 }

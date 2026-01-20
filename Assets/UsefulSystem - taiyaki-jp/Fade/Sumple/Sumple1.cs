@@ -25,7 +25,7 @@ public class Sumple1 : MonoBehaviour
 
         _button.onClick.AddListener(() =>
             //↓このように呼び出す
-            _ = _fadeManager.FadeAndSceneChenge<Enum>("SumpleScene2",
+            _ = _fadeManager.FadeAndSceneChange<Enum>("SumpleScene2",
                 startOrigin: _startOrigin.UseOrigin,//FillOriginEnum.cs参照
                 endOrigin: _endOrigin.UseOrigin,//FillOriginEnum.cs参照
                 startColor: _startColor.UseColor,
@@ -34,5 +34,6 @@ public class Sumple1 : MonoBehaviour
                 endColor: _endColor.UseColor
             )
         );
+        _ = SoundManager.Instance.Init(15);
     }
 }

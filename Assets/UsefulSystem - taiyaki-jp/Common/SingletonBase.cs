@@ -1,12 +1,30 @@
+using System;
 using UnityEngine;
 
 namespace UsefulSystem.Common
 {
-    public class SingletonBase<T> : MonoBehaviour where T : MonoBehaviour
+    public abstract class SingletonBase<T> : MonoBehaviour where T : SingletonBase<T>
     {
-        private static T _instance;
+        protected static T _instance;
 
-        public static T Instance
+        protected static void SetInstance(T instance)
+        {
+            if (_instance == null)
+            {
+                throw new InvalidOperationException($"{typeof(T).Name} is already initialized");
+            }
+            _instance = instance;
+        }
+        protected static T GetInstance()
+        {
+            if (_instance == null)
+            {
+                throw new InvalidOperationException($"{typeof(T).Name} is not initialized");
+            }
+
+            return _instance;
+        }
+        /*public static T Instance
         {
             get
             {
@@ -14,14 +32,16 @@ namespace UsefulSystem.Common
                 {
                     var obj = FindObjectOfType<T>(); //Tを探してくる
                     if (obj == null) //なければエラー
+                    {
                         Debug.LogError(typeof(T) + "をアタッチしてあるGameObjectがないよー");
+                    }
                     else //あればインスタンスに
                         _instance = obj;
                 }
 
                 return _instance; //基本すぐこれ
             }
-        }
+        }*/
 
         //よくあるシングルトンAwake
         protected virtual void Awake()
@@ -35,6 +55,11 @@ namespace UsefulSystem.Common
                 _instance = this as T;
                 DontDestroyOnLoad(this.gameObject);
             }
+        }
+
+        protected static void Create(T instance)
+        {
+            _instance = instance;
         }
     }
 }
