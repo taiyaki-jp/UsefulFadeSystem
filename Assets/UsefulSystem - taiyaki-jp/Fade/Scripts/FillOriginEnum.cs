@@ -43,3 +43,9 @@ public enum FadeActionMode
     AfterFade,
     FinishFade
 }
+
+public enum FadeMode
+{
+    FadeIn = 1,
+    FadeOut = -1,
+}

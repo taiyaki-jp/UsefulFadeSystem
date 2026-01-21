@@ -1,5 +1,8 @@
-# UsefulFadeSystem
- 便利なフェードシステムのパッケージ
+# UsefulSystems
+便利な各種システム  
+内容
+* フェードシステム
+* サウンドシステム
 
 ### ブランチ説明
 * UniTask
