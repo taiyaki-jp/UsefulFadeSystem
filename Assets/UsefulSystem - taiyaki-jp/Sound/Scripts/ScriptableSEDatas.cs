@@ -13,5 +13,5 @@ public class SEData
 {
     [SerializeField] public string seName;
     [SerializeField] public AudioClip audioClip;
-    [SerializeField, Range(0, 1)] public float volume = 1;
+    [SerializeField, Range(0, 1)] public float volume ;
 }

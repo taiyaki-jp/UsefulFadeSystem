@@ -18,7 +18,7 @@ public class Sumple1 : MonoBehaviour
     [SerializeField] private RGBColorPicker _endColor;
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         //これでフェードマネージャーを取れる
         _fadeManager = FadeManager.Instance;
@@ -34,6 +34,5 @@ public class Sumple1 : MonoBehaviour
                 endColor: _endColor.UseColor
             )
         );
-        _ = SoundManager.Instance.Init(15);
     }
 }

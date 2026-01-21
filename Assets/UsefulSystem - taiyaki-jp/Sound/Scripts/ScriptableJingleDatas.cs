@@ -13,5 +13,5 @@ public class JingleData
 {
     [SerializeField] public string jingleName;
     [SerializeField] public AudioClip audioClip;
-    [SerializeField, Range(0, 1)] public float volume = 1;
+    [SerializeField, Range(0, 1)] public float volume;
 }
