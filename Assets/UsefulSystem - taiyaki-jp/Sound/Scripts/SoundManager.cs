@@ -249,7 +249,7 @@ public class SoundManager : SingletonBase<SoundManager>
     /// <param name="key">画面上のtools内から生成されるSETypeEnum(SEの名前になります)</param>
     public void PlaySE(SETypeEnum key)
     {
-        if (_noSE || _seSourcePool == null) return;
+        if (_noSE) return;
         //上でデータ存在するか確認してから生成
         if(_seSourcePool == null)
         {
