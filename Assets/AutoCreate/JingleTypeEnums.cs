@@ -5,4 +5,5 @@
 /// </summary>
 public enum JingleTypeEnum
 {
+    SumpleJingle1 ,
 }

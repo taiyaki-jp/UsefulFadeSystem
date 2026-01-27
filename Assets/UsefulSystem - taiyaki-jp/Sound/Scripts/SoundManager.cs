@@ -29,6 +29,7 @@ public class SoundManager : SingletonBase<SoundManager>
 
     //SEを同時に何個鳴らすか
     private int _seMaxCount;
+    private bool _isInited = false;
 
     /// <summary>
     /// 初期化してサウンドのデータをロードします
@@ -36,10 +37,12 @@ public class SoundManager : SingletonBase<SoundManager>
     /// <param name="seMaxCount">SEを同時に鳴らす最大数　初期値は15</param>
     public async UniTask Init(int seMaxCount = 15)
     {
+        if (_isInited)return;
         _seMaxCount = seMaxCount;
         await LoadBGMData();
         await LoadJingleData();
         await LoadSEData();
+        _isInited = true;
     }
 
 #region BGM
@@ -268,7 +271,7 @@ public class SoundManager : SingletonBase<SoundManager>
         if (getSE)
         {
             AudioSource thisSeSource = _seSourcePool.Find(s => s.isPlaying == false);
-            if (thisSeSource != null)
+            if (thisSeSource == null)
             {
                 Debug.LogWarning("SEの同時再生数上限に到達しました");
                 return;
@@ -372,6 +375,10 @@ public class SoundManager : SingletonBase<SoundManager>
                 StopBGM();
                 await DoPlayJingle(jingle);
                 ContinueBGM();
+            }
+            else
+            {
+                await DoPlayJingle(jingle);
             }
         }
         else

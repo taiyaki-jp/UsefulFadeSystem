@@ -7,6 +7,7 @@ public class Sumple1 : MonoBehaviour
 {
     private FadeManager _fadeManager;
     [SerializeField] private Button _button;
+    [SerializeField] private Button _endButton;
 
     [Header("Origin")]
     [SerializeField] private OriginSetter _startOrigin;
@@ -19,14 +20,14 @@ public class Sumple1 : MonoBehaviour
     [SerializeField] private RGBColorPicker _endColor;
 
     // Start is called before the first frame update
-    private async void Start()
+    private void Start()
     {
         //これでフェードマネージャーを取れる
         _fadeManager = FadeManager.Instance;
 
         _button.onClick.AddListener(() =>
             //↓このように呼び出す
-            _ = _fadeManager.FadeAndSceneChange<Enum>("SumpleScene2",
+            _ = _fadeManager.FadeAndSceneChange<Enum>("SoundSumpleScene",
                 startOrigin: _startOrigin.UseOrigin, //FillOriginEnum.cs参照
                 endOrigin: _endOrigin.UseOrigin, //FillOriginEnum.cs参照
                 startColor: _startColor.UseColor,
@@ -35,7 +36,12 @@ public class Sumple1 : MonoBehaviour
                 endColor: _endColor.UseColor
             )
         );
-        await UniTask.Delay(TimeSpan.FromSeconds(5f));
-        _fadeManager.InstantDo();
+        _endButton.onClick.AddListener(()=> _ = _fadeManager.GameEndFade());
+    }
+
+    private void OnDestroy()
+    {
+        _button.onClick.RemoveAllListeners();
+        _endButton.onClick.RemoveAllListeners();
     }
 }

@@ -5,4 +5,6 @@
 /// </summary>
 public enum BGMTypeEnum
 {
+    幻想的で勇ましいオーケストラ ,
+    人類未踏の秘境 ,
 }

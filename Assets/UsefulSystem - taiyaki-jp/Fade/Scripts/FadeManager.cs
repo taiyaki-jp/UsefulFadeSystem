@@ -169,6 +169,7 @@ public class FadeManager : SingletonBase<FadeManager>
         await _load.FadeSystem(_token.Token,FadeMode.FadeIn, _finalMid, endColor, endOrigin);
         //フェード明け
         _finishAction?.Invoke();
+        _isFaded = false;
 
         _fadeCanvas.SetActive(false);
         _isFadeing = false;
@@ -181,7 +182,7 @@ public class FadeManager : SingletonBase<FadeManager>
     public async UniTaskVoid GameEndFade()
     {
         _fadeCanvas.SetActive(true);
-        await _load.FadeSystem<Enum>(_token.Token,FadeMode.FadeOut, Color.black,Color.black);
+        await _load.FadeSystem<Enum>(_token.Token,FadeMode.FadeOut, Color.clear,Color.black);
         await UniTask.Delay(TimeSpan.FromSeconds(1));
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;

@@ -28,8 +28,7 @@ public class FadeAndLoad
     /// <param name="endColor">終了時の色</param>
     /// <param name="origin">[省略可]FillOriginEnumのどれか　省略すると透明度フェード</param>
     /// <typeparam name="TOriginEnum"></typeparam>
-    public async UniTask FadeSystem<TOriginEnum>(CancellationToken token, FadeMode mode, Color startColor,
-        Color endColor, TOriginEnum origin = default) where TOriginEnum : Enum
+    public async UniTask FadeSystem<TOriginEnum>(CancellationToken token,FadeMode mode,Color startColor,Color endColor,TOriginEnum origin = default) where TOriginEnum : Enum
     {
 
         var useColor = (startColor != endColor);//フェード中色を変えるか
