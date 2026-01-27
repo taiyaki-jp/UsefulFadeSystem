@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿#if UNITY_EDITOR
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using UnityEditor;
@@ -124,3 +125,4 @@ public class SoundEnumCreater : MonoBehaviour
         Debug.Log($"JingleのEnumを{DirectoryPath+JingleEnumPath}に作成しました");
     }
 }
+#endif
