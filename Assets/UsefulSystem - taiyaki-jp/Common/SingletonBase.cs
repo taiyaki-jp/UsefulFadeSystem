@@ -56,10 +56,5 @@ namespace UsefulSystem.Common
                 DontDestroyOnLoad(this.gameObject);
             }
         }
-
-        protected static void Create(T instance)
-        {
-            _instance = instance;
-        }
     }
 }

@@ -1,4 +1,4 @@
-namespace FadeOrigins
+namespace FadeOptions
 {
     public enum Horizontal
     {

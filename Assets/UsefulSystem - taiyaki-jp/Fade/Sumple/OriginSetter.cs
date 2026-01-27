@@ -1,5 +1,5 @@
 using System;
-using FadeOrigins;
+using FadeOptions;
 using UnityEngine;
 using UnityEngine.UI;
 

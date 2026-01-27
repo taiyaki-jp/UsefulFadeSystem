@@ -1,6 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
 using System;
-using FadeOrigins;
+using FadeOptions;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Threading;
@@ -8,12 +8,12 @@ using System.Threading;
 public class FadeAndLoad
 {
     private float _fadeSpeed=1;
-    private CancellationTokenSource _cancellationTokenSource;
     public float Speed
     {
         set => _fadeSpeed = value;
     }
     private Image _fadeImage;
+
     public Image Image
     {
         set => _fadeImage = value;
@@ -22,12 +22,14 @@ public class FadeAndLoad
     /// <summary>
     /// 各フェードを呼び出すUniTask
     /// </summary>
+    /// <param name="token"></param>
     /// <param name="mode">FadeMode</param>
     /// <param name="startColor">開始時の色</param>
     /// <param name="endColor">終了時の色</param>
     /// <param name="origin">[省略可]FillOriginEnumのどれか　省略すると透明度フェード</param>
     /// <typeparam name="TOriginEnum"></typeparam>
-    public async UniTask FadeSystem<TOriginEnum>(FadeMode mode,Color startColor,Color endColor,TOriginEnum origin = default) where TOriginEnum : Enum
+    public async UniTask FadeSystem<TOriginEnum>(CancellationToken token, FadeMode mode, Color startColor,
+        Color endColor, TOriginEnum origin = default) where TOriginEnum : Enum
     {
 
         var useColor = (startColor != endColor);//フェード中色を変えるか
@@ -53,11 +55,24 @@ public class FadeAndLoad
         var t = 0f;
         while (t<1)
         {
+            //キャンセルが飛んでいればこのフェードを即時完了
+            if (token.IsCancellationRequested)
+            {
+                Debug.Log("Cancellation requested");
+                TaskCancel(mode,startColor,endColor);
+                return;
+            }
             t += _fadeSpeed * Time.deltaTime;
             if (useOrigin) Fade(mode, t);
             if (useColor)  Fade(t,startColor,endColor);
             await UniTask.Yield();
         }
+    }
+
+    private void TaskCancel(FadeMode mode, Color startColor, Color endColor)
+    {
+        Fade(mode, 1);
+        Fade(1,startColor,endColor);
     }
 
     /// <summary>
@@ -112,14 +127,5 @@ public class FadeAndLoad
                 return Image.FillMethod.Radial360;
         }
         return Image.FillMethod.Horizontal;
-    }
-    
-    public void FadeCancel()
-    {
-        _cancellationTokenSource?.Dispose();
-
-        _cancellationTokenSource= new CancellationTokenSource();
-        _cancellationTokenSource.Token.Register(() => { _cancellationTokenSource.Dispose(); });
-        _cancellationTokenSource.Cancel();
     }
 }
